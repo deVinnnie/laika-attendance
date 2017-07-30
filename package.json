@@ -1,0 +1,26 @@
+{
+  "name": "laika-attendance",
+  "version": "1.0.0",
+  "description": "Attendence for activities",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vincent Ceulemans",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.15.3",
+    "pug": "^2.0.0-rc.2",
+    "webdav-fs": "^1.5.0"
+  },
+  "now": {
+      "name": "laika-attendance",
+      "type": "npm",
+      "env": {
+        "WEBDAV_URL": "@attendance-webdav-url",
+        "WEBDAV_USER": "@attendance-webdav-user",
+        "WEBDAV_PASSWORD": "@attendance-webdav-password"
+      }
+  }
+}
