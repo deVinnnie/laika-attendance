@@ -1,5 +1,18 @@
-html
+doctype html
+html(lang="nl")
   head
     title Laika Attendance
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    link(rel='stylesheet', href='/assets/purecss/base-min.css')
+    link(rel='stylesheet', href='/assets/main.css')
+    link(rel='stylesheet', href="/assets/font-awesome/css/font-awesome.min.css")
+
   body
-    h1= message
+    .content
+      h1
+        if error
+          i(class="fa fa-exclamation-triangle fa-5x", aria-hidden="true")
+        else
+          i(class="fa fa-check fa-5x", aria-hidden="true")
+        = message

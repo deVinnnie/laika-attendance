@@ -10,8 +10,14 @@ var wfs = require("webdav-fs")(
 );
 
 let states = {
-    "confirmed" : "v",
-    "absent" : "x",
+    "confirmed" : {
+        symbol: "v",
+        name: "aanwezig"
+    },
+    "absent" : {
+        symbol: "x",
+        name: "niet aanwezig"
+    }
 };
 
 let config;
@@ -24,7 +30,7 @@ function update(person, state, success, error){
         pattern = "[-vx] "+person;
         var re = new RegExp(pattern, "g");
 
-        let d = data.replace(re, states[state] + " " + person);
+        let d = data.replace(re, state.symbol + " " + person);
         
         console.log("Writing to file.");
         wfs.writeFile(file, d, function(err) {
@@ -46,23 +52,31 @@ function reloadConfig(callback){
     });
 }
 
+app.use('/assets', express.static(__dirname + '/assets'));
+app.use('/assets/purecss/', express.static(__dirname + '/node_modules/purecss/build/'));
+app.use('/assets/font-awesome/', express.static(__dirname + '/node_modules/font-awesome/'));
+
+app.get('/', function (req, res) {
+    res.render('index', { message: "The ships hung in the air like bricks don't." })
+})
+
 app.get('/:person', function (req, res) {
     reloadConfig(
         function(){
-            let state = req.query.state;
             let token = req.query.token;
             let person = req.params.person;
             
-            if(!states.hasOwnProperty(state) || (token !== config.token)){
+            if(!states.hasOwnProperty(req.query.state) || (token !== config.token)){
                 res.render('index', { message: "That's invalid" })
             }
             else{
+                let state = states[req.query.state];
                 update(person, state, 
                     function(){
-                        res.render('index', { message: "Status updated to " + state })
+                        res.render('index', { message: `Status verandert naar ${state.name}.`})
                     },
                     function(error){
-                        res.render('index', { message: "Something went wrong. Tip: try again later.", err: error })
+                        res.render('index', { message: "Er ging iets mis. Tip: probeer het later nog eens.", error: error })
                     });
             }
         }
